@@ -1,14 +1,16 @@
 #!/bin/sh
 
+DEV=`xinput | grep "AT Translated Set 2 keyboard" | awk '{print $7}' | sed -e "s/id=//"`
+
 if [ $# -ne 1 ]; then
     echo "[Error] Invalid argument(s)"
     exit 1
 fi
 
 if [ $1 = "off" ]; then
-    xinput disable 11
+    xinput disable $DEV
 elif [ $1 = "on" ]; then
-    xinput enable 11
+    xinput enable $DEV
 else
     echo "[Error] Invalid argument"
     exit 1
