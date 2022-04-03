@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ $# -ne 1 ]; then
+    echo "[Error] Invalid argument(s)"
+    exit 1
+fi
+
+if [ $1 = "off" ]; then
+    xinput disable 11
+elif [ $1 = "on" ]; then
+    xinput enable 11
+else
+    echo "[Error] Invalid argument"
+    exit 1
+fi
+
+exit 0
+
