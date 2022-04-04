@@ -1,0 +1,38 @@
+#!/bin/sh
+
+SCRIPT_DIR=~/scripts
+SRC_SCRIPT=$1
+LINK_NAME=$2
+
+# Check arguments
+if [ $# -ne 2 ]; then
+    echo "[Error] Invalid arguments."
+    exit 1
+fi
+
+# Check directory presence
+if [ ! -d $SCRIPT_DIR ]; then
+    mkdir $SCRIPT_DIR
+    echo "[Info] Created directory $SCRIPT_DIR"
+    echo "[Info] It's better to add $SCRIPT_DIR to PATH"
+fi
+
+# Check link presence
+if [ -f $SCRIPT_DIR/$LINK_NAME ]; then
+    echo "[Error] link already exists"
+    exit 1
+fi
+
+# if script directory is in the git worktree, add link to .gitignore
+if git -C $SCRIPT_DIR rev-parse 2>/dev/null; then
+    if [ -f $SCRIPT_DIR/.gitignore ]; then
+        ! (cat $SCRIPT_DIR/.gitignore | grep $LINK_NAME 1>/dev/null 2>&1) && echo $LINK_NAME >> $SCRIPT_DIR/.gitignore
+    else
+        echo $LINK_NAME > $SCRIPT_DIR/.gitignore
+    fi
+fi
+
+# Create symlink
+ln -s $SRC_SCRIPT $SCRIPT_DIR/$LINK_NAME
+echo "Symlink successfully created."
+exit 0
